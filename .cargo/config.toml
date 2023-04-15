@@ -2,3 +2,4 @@
 rustflags = ["-C", "link-arg=-fuse-ld=/opt/homebrew/bin/zld"]
 [target.aarch64-apple-darwin]
 rustflags = ["-C", "link-arg=-fuse-ld=/opt/homebrew/bin/zld"]
+
