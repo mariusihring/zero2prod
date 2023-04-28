@@ -13,7 +13,7 @@ async fn main() -> Result<(), std::io::Error> {
     //configuring tha rustl
     let configuration = get_configuration().expect("failed to get config");
     let connection_pool =
-        PgPool::connect(&configuration.database.connection_string().expose_secret())
+        PgPool::connect(configuration.database.connection_string().expose_secret())
             .await
             .expect("failed to connect to postgres");
     let address = format!("127.0.0.1:{}", configuration.application_port);
