@@ -1,6 +1,6 @@
+use crate::domain::SubscriberEmail;
 use secrecy::{ExposeSecret, Secret};
 
-use crate::domain::SubscriberEmail;
 #[derive(serde::Deserialize)]
 pub struct Settings {
     pub database: DatabaseSettings,
@@ -27,6 +27,7 @@ pub struct DatabaseSettings {
 pub struct EmailClientSettings {
     pub base_url: String,
     pub sender_email: String,
+    pub authorisation_token: Secret<String>,
 }
 
 impl EmailClientSettings {

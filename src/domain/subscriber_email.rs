@@ -30,7 +30,7 @@ mod tests {
     struct ValidEmailFixture(pub String);
 
     impl quickcheck::Arbitrary for ValidEmailFixture {
-        fn arbitrary<G: quickcheck::Gen>(g: &mut G) -> Self {
+        fn arbitrary<G: quickcheck::Gen>(_g: &mut G) -> Self {
             let email = SafeEmail().fake();
             Self(email)
         }
