@@ -2,10 +2,8 @@ use once_cell::sync::Lazy;
 
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 
-
 use uuid::Uuid;
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
-
 
 use zero2prod::startup::{get_connection_pool, Application};
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
@@ -29,20 +27,39 @@ pub struct TestApp {
     pub db_pool: PgPool,
 }
 
+impl TestApp {
+    pub async fn post_subscriptions(&self, body: String) -> reqwest::Response {
+        reqwest::Client::new()
+            .post(&format!("{}/subscriptions", &self.address))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(body)
+            .send()
+            .await
+            .expect("Failed to execute request.")
+    }
+}
+
 pub async fn spawn_app() -> TestApp {
     Lazy::force(&TRACING);
+
+    // Randomise configuration to ensure test isolation
     let configuration = {
-        let mut c = get_configuration().expect("failed to read config");
+        let mut c = get_configuration().expect("Failed to read configuration.");
+        // Use a different database for each test case
         c.database.database_name = Uuid::new_v4().to_string();
+        // Use a random OS port
         c.application.port = 0;
         c
     };
 
+    // Create and migrate the database
     configure_database(&configuration.database).await;
+
+    // Launch the application as a background task
     let application = Application::build(configuration.clone())
         .await
-        .expect("Failed to build applicaton");
-    let address = format!("https://127.0.0.1:{}", application.port());
+        .expect("Failed to build application.");
+    let address = format!("http://localhost:{}", application.port());
     let _ = tokio::spawn(application.run_until_stopped());
 
     TestApp {
