@@ -10,4 +10,4 @@ email_client:
   base_url: "https://api.postmarkapp.com"
   sender_email: "test@gmail.com"
   authorisation_token: "my-secret-token"
-  timeout_milliseconds: 10000
+  timeout_milliseconds: 500
