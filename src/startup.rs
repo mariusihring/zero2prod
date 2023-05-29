@@ -4,7 +4,7 @@ use crate::{
     routes::{health_check, subscribe},
 };
 use actix_web::{dev::Server, web, App, HttpServer};
-use secrecy::ExposeSecret;
+
 use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use std::net::TcpListener;
